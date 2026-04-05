@@ -26,6 +26,8 @@ namespace Zest.Infrastructure.DependencyInjection
             // repositories
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IAuthRepository, AuthRepository>();  
             // register a service is here 
             services.AddScoped<IJWTService, JwtService>();
             return services;
