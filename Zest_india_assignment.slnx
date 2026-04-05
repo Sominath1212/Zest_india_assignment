@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Zest.Application/Zest.Application.csproj" />
+  <Project Path="Zest.Domain/Zest.Domain.csproj" />
+  <Project Path="Zest.Infrastructure/Zest.Infrastructure.csproj" />
+  <Project Path="Zest.UI/Zest.UI.csproj" />
+</Solution>
