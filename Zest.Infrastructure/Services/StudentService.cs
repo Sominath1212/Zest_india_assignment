@@ -1,0 +1,96 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Zest.Application.DTOs.Student;
+using Zest.Application.Interfaces;
+using Zest.Domain.Entities;
+using Zest.Domain.Interfaces;
+
+namespace Zest.Infrastructure.Services
+{
+    
+    public class StudentService : IStudentService
+    {
+        private readonly IStudentRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public StudentService(IStudentRepository repository, IUnitOfWork unitOfWork)
+        {
+            _repository = repository;
+            _unitOfWork = unitOfWork;
+        }
+
+        public async Task<StudentResponseDto> CreateAsync(CreateStudentRequestDto request)
+        {
+            var entity = new Student
+            {
+                Name = request.Name,
+                Email = request.Email,
+                Age = request.Age,
+                CourseName = request.CourseName,
+                CreateDate = DateTime.UtcNow
+            };
+
+            await _repository.AddStudentAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
+
+            return MapToDto(entity);
+        }
+
+        public async Task<IEnumerable<StudentResponseDto>> GetAllAsync()
+        {
+            var students = await _repository.GetAllStudentsAsync();
+            return students.Select(MapToDto);
+        }
+
+        public async Task<StudentResponseDto?> GetByIdAsync(int id)
+        {
+            var student = await _repository.GetStudentByIdAsync(id);
+            if (student is null) return null;
+
+            return MapToDto(student);
+        }
+
+        public async Task<StudentResponseDto?> UpdateAsync(UpdateStudentRequestDto request)
+        {
+            var existing = await _repository.GetStudentByIdAsync(request.Id);
+            if (existing is null) return null;
+
+            existing.Name = request.Name;
+            existing.Email = request.Email;
+            existing.Age = request.Age;
+            existing.CourseName = request.CourseName;
+
+            await _repository.UpdateStudentAsync(existing);
+            await _unitOfWork.SaveChangesAsync();
+
+            return MapToDto(existing);
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var existing = await _repository.GetStudentByIdAsync(id);
+            if (existing is null) return false;
+
+            await _repository.DeleteStudentAsync(id);
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+
+        private static StudentResponseDto MapToDto(Student student)
+        {
+            return new StudentResponseDto
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Email = student.Email,
+                Age = student.Age,
+                CourseName = student.CourseName,
+                CreateDate = student.CreateDate
+            };
+        }
+    }
+}

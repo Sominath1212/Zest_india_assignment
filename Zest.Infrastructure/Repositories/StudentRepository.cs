@@ -20,7 +20,7 @@ namespace Zest.Infrastructure.Repositories
             await _context.Students.AddAsync(student);
         }
 
-        public async Task DeleteStudentAsync(Guid id)
+        public async Task DeleteStudentAsync(int id)
         {
             var student = await _context.Students.FindAsync(id);
             if (student is null) return;

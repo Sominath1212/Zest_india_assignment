@@ -9,6 +9,6 @@ namespace Zest.Domain.Interfaces
         Task<Student> GetStudentByIdAsync(int id);
         Task<IEnumerable<Student>> GetAllStudentsAsync();
         Task UpdateStudentAsync(Student student);
-        Task DeleteStudentAsync(Guid id);
+        Task DeleteStudentAsync(int id);
     }
 }
