@@ -30,6 +30,8 @@ namespace Zest.Infrastructure.DependencyInjection
             services.AddScoped<IAuthRepository, AuthRepository>();  
             // register a service is here 
             services.AddScoped<IJWTService, JwtService>();
+            services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IAuthService, AuthService>();
             return services;
         }
     }
