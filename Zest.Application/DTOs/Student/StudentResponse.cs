@@ -10,5 +10,7 @@ namespace Zest.Application.DTOs.Student
         public int Age { get; set; }
         public string CourseName { get; set; } = string.Empty;
         public DateTime CreateDate { get; set; }
+
+
     }
 }

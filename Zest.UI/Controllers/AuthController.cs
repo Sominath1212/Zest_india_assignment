@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Zest.Application.DTOs.Auth;
 using Zest.Application.Interfaces;
 
@@ -16,7 +17,7 @@ public class AuthController : ControllerBase
         _authService = authService;
         _logger = logger;
     }
-
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto dto)
     {
@@ -24,6 +25,7 @@ public class AuthController : ControllerBase
         return Ok(new { token });
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
     {

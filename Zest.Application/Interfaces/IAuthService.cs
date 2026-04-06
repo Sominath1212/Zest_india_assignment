@@ -6,7 +6,7 @@ namespace Zest.Application.Interfaces
 {
     public interface IAuthService
     {
-        Task<string> Login(LoginRequestDto dto);
-        Task<string> Register(RegisterRequestDto dto);
+        Task<LoginResponseDto> Login(LoginRequestDto dto);
+        Task<RegisterResponseDto> Register(RegisterRequestDto dto);
     }
 }

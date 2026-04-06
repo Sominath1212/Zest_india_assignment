@@ -12,7 +12,7 @@ namespace Zest.Application.Interfaces
         Task<StudentResponseDto> CreateAsync(CreateStudentRequestDto request);
         Task<StudentResponseDto?> GetByIdAsync(int id);
         Task<IEnumerable<StudentResponseDto>> GetAllAsync();
-        Task<StudentResponseDto?> UpdateAsync(UpdateStudentRequestDto request);
+        Task<StudentResponseDto?> PatchAsync(int id, UpdateStudentRequestDto request);
         Task<bool> DeleteAsync(int id);
 
     }
