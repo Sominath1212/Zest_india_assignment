@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using Zest.Application.DTOs.Student;
 using Zest.Application.Interfaces;
 using Zest.Domain.Entities;
@@ -10,7 +6,7 @@ using Zest.Domain.Interfaces;
 
 namespace Zest.Infrastructure.Services
 {
-    
+
     public class StudentService : IStudentService
     {
         private readonly IStudentRepository _repository;
@@ -53,15 +49,22 @@ namespace Zest.Infrastructure.Services
             return MapToDto(student);
         }
 
-        public async Task<StudentResponseDto?> UpdateAsync(UpdateStudentRequestDto request)
+        public async Task<StudentResponseDto?> PatchAsync(int id, UpdateStudentRequestDto request)
         {
-            var existing = await _repository.GetStudentByIdAsync(request.Id);
+            var existing = await _repository.GetStudentByIdAsync(id);
             if (existing is null) return null;
 
-            existing.Name = request.Name;
-            existing.Email = request.Email;
-            existing.Age = request.Age;
-            existing.CourseName = request.CourseName;
+            if (!string.IsNullOrWhiteSpace(request.Name))
+                existing.Name = request.Name;
+
+            if (!string.IsNullOrWhiteSpace(request.Email))
+                existing.Email = request.Email;
+
+            if (request.Age > 0)
+                existing.Age = (int)request.Age;
+
+            if (!string.IsNullOrWhiteSpace(request.CourseName))
+                existing.CourseName = request.CourseName;
 
             await _repository.UpdateStudentAsync(existing);
             await _unitOfWork.SaveChangesAsync();

@@ -25,7 +25,7 @@ public class AuthService : IAuthService
         _logger = logger;
     }
 
-    public async Task<string> Register(RegisterRequestDto dto)
+    public async Task<RegisterResponseDto> Register(RegisterRequestDto dto)
     {
         _logger.LogInformation("Register attempt for email {Email}", dto.Email);
 
@@ -33,15 +33,21 @@ public class AuthService : IAuthService
         if (exists)
         {
             _logger.LogWarning("Register failed. Email already exists: {Email}", dto.Email);
-            throw new Exception("User already exists");
+
+            return new RegisterResponseDto
+            {
+                IsSuccess = false,
+                Message = "User already exists!"
+            };
         }
 
-        var user = new User
+        User user = new User
         {
+
             Name = dto.Name,
             Email = dto.Email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-            
+
         };
 
         await _authRepository.RegisterAsync(user);
@@ -49,10 +55,18 @@ public class AuthService : IAuthService
 
         _logger.LogInformation("User registered successfully: {Email}", dto.Email);
 
-        return _jwtService.GenerateToken(user.Id.ToString(), user.Email);
+
+
+        return new RegisterResponseDto
+        {
+            IsSuccess = true,
+            Message = "User registered successfully!",
+            UserId = user.Id,
+            Email=user.Email
+        };
     }
 
-    public async Task<string> Login(LoginRequestDto dto)
+    public async Task<LoginResponseDto> Login(LoginRequestDto dto)
     {
         _logger.LogInformation("Login attempt for email {Email}", dto.Email);
 
@@ -60,7 +74,13 @@ public class AuthService : IAuthService
         if (user is null)
         {
             _logger.LogWarning("Login failed. User not found: {Email}", dto.Email);
-            throw new Exception("Invalid credentials");
+
+            return new LoginResponseDto
+            {
+                IsSuccess = false,
+                Message = "Invalid credentials!",
+                Token = null
+            };
         }
 
         var isValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
@@ -71,7 +91,15 @@ public class AuthService : IAuthService
         }
 
         _logger.LogInformation("Login successful for email {Email}", dto.Email);
+        string token = _jwtService.GenerateToken(user.Id.ToString(), user.Email);
 
-        return _jwtService.GenerateToken(user.Id.ToString(), user.Email);
+        return new LoginResponseDto
+        {
+            IsSuccess = true,
+            Message = "Login successful!",
+            Token = token,
+            UserId = user.Id,
+            Email = user.Email
+        };
     }
 }
