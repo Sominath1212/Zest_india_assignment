@@ -5,10 +5,9 @@ using System.Text;
 using Zest.Infrastructure.DependencyInjection;
 using Zest.UI.Middlewares;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var jwtSettings = builder.Configuration.GetSection("Jwt");
+IConfigurationSection jwtSettings = builder.Configuration.GetSection("Jwt");
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .WriteTo.Console()
@@ -37,7 +36,6 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Host.UseSerilog();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -68,7 +66,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddInfrastructure(builder.Configuration);
 
-var app = builder.Build();
+WebApplication? app = builder.Build();
 app.UseStatusCodePages(context =>
 {
     var response = context.HttpContext.Response;
@@ -79,7 +77,6 @@ app.UseStatusCodePages(context =>
     }
     return Task.CompletedTask;
 });
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

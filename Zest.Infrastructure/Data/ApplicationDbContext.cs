@@ -5,6 +5,9 @@ using Zest.Domain.Entities;
 
 namespace Zest.Infrastructure.Data
 {
+    /// <summary>
+    /// Database Connection class for the application.
+    /// </summary>
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
