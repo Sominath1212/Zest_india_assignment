@@ -9,10 +9,17 @@ using Zest.Infrastructure.Services;
 
 namespace Zest.Infrastructure.DependencyInjection
 {
-   
-
+    /// <summary>
+    /// Registers a dependencies in the container.
+    /// </summary>
     public static class DependencyInjection
     {
+        /// <summary>
+        /// Add all the dependencies for the infrastructure layer in the container.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
         public static IServiceCollection AddInfrastructure(
             this IServiceCollection services,
             IConfiguration configuration)
@@ -28,6 +35,7 @@ namespace Zest.Infrastructure.DependencyInjection
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();  
+
             // register a service is here 
             services.AddScoped<IJWTService, JwtService>();
             services.AddScoped<IStudentService, StudentService>();

@@ -5,6 +5,10 @@ using Zest.Application.Interfaces;
 
 namespace Zest.UI.Controllers;
 
+
+/// <summary>
+/// Handles all the authentication .
+/// </summary>
 [Route("api/[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
@@ -17,19 +21,31 @@ public class AuthController : ControllerBase
         _authService = authService;
         _logger = logger;
     }
+
+    /// <summary>
+    /// Register Route for the register user.
+    /// </summary>
+    /// <param name="dto"></param>
+    /// <returns></returns>
     [AllowAnonymous]
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto dto)
     {
-        var token = await _authService.Register(dto);
+        RegisterResponseDto? token = await _authService.Register(dto);
         return Ok(new { token });
     }
 
+
+    /// <summary>
+    /// Login route for login.
+    /// </summary>
+    /// <param name="dto"></param>
+    /// <returns></returns>
     [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
     {
-        var token = await _authService.Login(dto);
+        LoginResponseDto? token = await _authService.Login(dto);
         return Ok(new { token });
     }
 }

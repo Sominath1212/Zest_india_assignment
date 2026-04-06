@@ -18,9 +18,12 @@ namespace Zest.Infrastructure.Services
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public async Task<StudentResponseDto> CreateAsync(CreateStudentRequestDto request)
         {
-            var entity = new Student
+            Student entity = new Student
             {
                 Name = request.Name,
                 Email = request.Email,
@@ -35,23 +38,32 @@ namespace Zest.Infrastructure.Services
             return MapToDto(entity);
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public async Task<IEnumerable<StudentResponseDto>> GetAllAsync()
         {
-            var students = await _repository.GetAllStudentsAsync();
+            IEnumerable<Student> students = await _repository.GetAllStudentsAsync();
             return students.Select(MapToDto);
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public async Task<StudentResponseDto?> GetByIdAsync(int id)
         {
-            var student = await _repository.GetStudentByIdAsync(id);
+            Student? student = await _repository.GetStudentByIdAsync(id);
             if (student is null) return null;
 
             return MapToDto(student);
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public async Task<StudentResponseDto?> PatchAsync(int id, UpdateStudentRequestDto request)
         {
-            var existing = await _repository.GetStudentByIdAsync(id);
+            Student? existing = await _repository.GetStudentByIdAsync(id);
             if (existing is null) return null;
 
             if (!string.IsNullOrWhiteSpace(request.Name))
@@ -72,9 +84,12 @@ namespace Zest.Infrastructure.Services
             return MapToDto(existing);
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _repository.GetStudentByIdAsync(id);
+            Student? existing = await _repository.GetStudentByIdAsync(id);
             if (existing is null) return false;
 
             await _repository.DeleteStudentAsync(id);
@@ -82,7 +97,11 @@ namespace Zest.Infrastructure.Services
 
             return true;
         }
-
+        /// <summary>
+        /// Prepare result.
+        /// </summary>
+        /// <param name="student"></param>
+        /// <returns></returns>
         private static StudentResponseDto MapToDto(Student student)
         {
             return new StudentResponseDto

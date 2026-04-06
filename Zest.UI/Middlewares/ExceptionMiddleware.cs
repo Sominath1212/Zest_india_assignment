@@ -3,6 +3,9 @@ using System.Text.Json;
 
 namespace Zest.UI.Middlewares
 {
+    /// <summary>
+    /// Middleware for exception handling.
+    /// </summary>
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
@@ -14,6 +17,12 @@ namespace Zest.UI.Middlewares
             _logger = logger;
         }
 
+
+        /// <summary>
+        /// Middleware Invoke method to catch unhandled exceptions and return a JSON response with error details.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public async Task InvokeAsync(HttpContext context)
         {
             try
@@ -33,7 +42,7 @@ namespace Zest.UI.Middlewares
                     detail = ex.Message
                 };
 
-                var json = JsonSerializer.Serialize(response);
+                string? json = JsonSerializer.Serialize(response);
 
                 await context.Response.WriteAsync(json);
             }
